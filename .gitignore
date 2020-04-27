@@ -1,1 +1,10 @@
 .ipynb_checkpoints
+
+# IDE settings etc
+/.vs/
+/.vscode/
+/.idea/
+
+# Ignore some MS Windows files
+desktop.ini
+thumbs.db
