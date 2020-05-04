@@ -80,7 +80,7 @@
 	\and Jana Pfeffer
 	\and Yen-Ting Wang}
 \institute{Team abraca-data}
-\date{\small{May 4, 2020}}
+\date{\small{May 5, 2020}}
 %
 
 \makeatletter
@@ -127,10 +127,137 @@
 %\tableofcontents[hideallsubsections]
 %\end{frame}
 %\section{Introduction}
-\begin{frame}{Introduction}
+\begin{frame}{Data}
+\begin{centering}
+\includegraphics[width=\textwidth]{data.jpg}
+\end{centering}
+\end{frame}
+
+\begin{frame}{First Approach}
+\alert{Methods employed}
         \begin{itemize}
-	\item \alert{Hi} 
+	\item Holt Winter
+	\item Random Forest
+	\item LSTM
+        \end{itemize}
+\alert{General data preparation for time series analysis}
+\begin{itemize}
+	\item Aggregate to items sold per day per item.
+	\item Replace missing days with zeros.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Holt Winter}
+\begin{figure}
+\includegraphics[width=\textwidth]{holt.png}
+\caption{\scriptsize Forecasting sales of item 7798 with both additive and multiplicative seasonality.}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Random Forest}
+\begin{itemize}
+\item Training data is lagged to create features. 
+\item Actual time series as target.
+\end{itemize}
+\begin{table}
+\includegraphics[width=.9\textwidth]{randomforestdata.png}
+\caption{Example training data.}
+\end{table}
+
+\end{frame}
+
+\begin{frame}{Random Forest}
+\begin{figure}
+\includegraphics[width=\textwidth]{rf.png}
+\caption{Random Forest prediction and actual for item 7798.}
+\end{figure}
+\alert{Performance compared to baseline:}\\[2px]
+Perfect Result: 7895975.87\\
+Random Forest: -1,359,513.29\\
+Baseline 2: -1,672,504.21\\
+Baseline 1: -3,727,365.60\\
+
+\end{frame}
+
+\begin{frame}{LSTM}
+\begin{footnotesize}
+\begin{itemize}
+	\item Generate time series data with 7 lags.
+	\item Parameters: activation='relu', Dropout(0.15), Dense(1), optimizer='adam', loss='mse', shuffle = False, verbose = 1
+\end{itemize}
+\end{footnotesize}
+\begin{figure}
+\includegraphics[width=.8\textwidth]{lstm1.png}
+\vspace{-12px}
+\caption{\tiny Prediction for item 7798 for the last 14 days in training dataset with 500 epochs. Loss: 0.033}
+\end{figure}
+\vspace{-18px}
+\begin{figure}
+\includegraphics[width=.8\textwidth]{lstm2.png}
+\vspace{-12px}
+\caption{\tiny Prediction for item 7798 for the last 14 days in training dataset with 150 epochs. Loss: 0020}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Next Steps}
+        \begin{itemize}
+         \item Generate good features
+         \item Check for seasonality
         \end{itemize}
 \end{frame}
+
+\begin{frame}{Feature Generation}
+        \begin{itemize}
+	\item Purchase time in various dimensions (weekday/day of the month/month/hour/calendar week)
+	\item Discount from Recommended Retail Price to Sales Price (absolute/relative)
+        \end{itemize}
+\begin{figure}
+\includegraphics[width=.7\textwidth]{orderbyhour.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Promotion Flag}
+\begin{itemize}
+	\item Add a promotion flag to orders if an item was promoted that day.
+	\begin{itemize}
+	\item[$\rightarrow$] Promotions in Info.csv are only available for the future
+	\end{itemize}
+	\item Explore ways to identify promotions in the orders data as outliers
+	\begin{itemize}
+		\item[$\rightarrow$] Use IQR as in the lectures
+		\item[$\rightarrow$] Use modified IQR $(Median + 2*IQR[25, 90])$
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Promotion Flag}
+\begin{figure}
+\includegraphics[width=.75\textwidth]{prom1.png}
+\end{figure}
+\begin{figure}
+\includegraphics[width=.75\textwidth]{prom2.png}
+\end{figure}
+\begin{figure}
+\includegraphics[width=.75\textwidth]{prom3.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Seasonality Check}
+\begin{figure}
+\includegraphics[width=.8\textwidth]{season.png}
+\caption{Seasonality.}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Questions}
+        \begin{itemize}
+         \item
+        \end{itemize}
+\end{frame}
+
 
 \end{document}
